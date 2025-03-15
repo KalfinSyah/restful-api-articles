@@ -1,33 +1,35 @@
 <?php
 
-require_once __DIR__ . '/../../data/ArticlesRepository.php';
+require_once __DIR__ . '/data/ArticlesRepository.php';
 
 header('Content-Type: application/json');
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (isset($_GET['id']) && count($_GET) === 1) {
-            $jsonResponse = \json_encode(ArticlesRepository::getProviderById($_GET['id']));
+            $jsonResponse = \json_encode(ArticlesRepository::getAuthorById($_GET['id']));
             echo $jsonResponse;
         } elseif (empty($_GET)) {
-            $jsonResponse = \json_encode(ArticlesRepository::getProviders());
+            $jsonResponse = \json_encode(ArticlesRepository::getAuthors());
             echo $jsonResponse;
         } else {
             CustomThrow::exception('Invalid parameter');
         }
     }
     
-    
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        ArticlesRepository::addProvider(
+        ArticlesRepository::addAuthor(
             $_POST['name'],
-            $_POST['link'],
+            $_POST['gender'],
+            $_POST['age'],
+            $_POST['country'],
+            $_POST['email'],
         );
 
         $jsonResponse = \json_encode([
             'status'=> [
                 'code'=> 200,
-                'message'=> 'Success add new provider'
+                'message'=> 'Success add new author'
             ],
 
             'data'=> $_POST
@@ -39,16 +41,19 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         parse_str(file_get_contents("php://input"), $putData);
 
-        ArticlesRepository::updateProviderById(
+        ArticlesRepository::updateAuthorById(
             $_GET['id'],
             $putData['name'] ?? null,
-            $putData['link'] ?? null,
+            $putData['gender'] ?? null,
+            $putData['age'] ?? null,
+            $putData['country'] ?? null,
+            $putData['email'] ?? null
         );
 
         $jsonResponse = \json_encode([
             'status'=> [
                 'code'=> 200,
-                'message'=> 'Success update provider'
+                'message'=> 'Success update author'
             ],
 
             'data'=> $putData
@@ -58,14 +63,14 @@ try {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-        ArticlesRepository::deleteProviderById(
+        ArticlesRepository::deleteAuthorById(
             $_GET['id']
         );
 
         $jsonResponse = \json_encode([
             'status'=> [
                 'code'=> 200,
-                'message'=> 'Success delete provider with id ' . $_GET['id']
+                'message'=> 'Success delete author with id ' . $_GET['id']
             ]
         ]);
 

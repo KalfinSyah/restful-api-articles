@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../data/ArticlesRepository.php';
+require_once __DIR__ . '/data/ArticlesRepository.php';
 
 header('Content-Type: application/json');
 
